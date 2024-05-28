@@ -16,8 +16,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          src="https://cdn.jsdelivr.net/gh/Orphe-OSS/ORPHE-CORE.js/js/ORPHE-CORE.js"
+          crossOrigin="anonymous"
+          type="text/javascript"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/gh/Orphe-OSS/ORPHE-CORE.js/js/CoreToolkit.js"
+          crossOrigin="anonymous"
+          type="text/javascript"
+        />
+      </head>
       <body>
-        <header><h1>Orphe proto</h1></header>
+        <header>
+          <h1>Orphe proto</h1>
+        </header>
         <main className={inter.className}>{children}</main>
       </body>
     </html>

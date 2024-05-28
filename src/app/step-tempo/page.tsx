@@ -2,12 +2,15 @@
 import { Orphe } from "@/lib/orphe/ORPHE-CORE";
 import { useCallback, useEffect, useState } from "react";
 
+const fuckArray: any[] = [];
+
 const StepTempoPage = () => {
   const [orphe, setOrphe] = useState<Orphe | null>(null);
   const [tempo, setTempo] = useState<number>(0);
   const [outputMidiList, setOutputMidiList] = useState<MIDIOutput[]>([]);
   const [outputMidi, setOutputMidi] = useState<MIDIOutput | null>(null);
   const [coreInfo, setCoreInfo] = useState<any>({});
+  const [gaits, setGaits] = useState<any[]>([]);
 
   const connectMidi = useCallback(() => {
     if (typeof window !== "undefined") {
@@ -26,15 +29,51 @@ const StepTempoPage = () => {
 
     orphe.gotGait = function (gait: any) {
       setCoreInfo(gait);
+      // ここを入れないとなぜかcoreInfoがアップデートされない
+      const exists = gaits.slice();
+      setGaits([...exists, gait]);
+
+      fuckArray.push(Date.now().valueOf());
+      if (fuckArray.length > 5) {
+        fuckArray.shift();
+      }
+      console.log(fuckArray);
     };
+
+    // orphe.gotGait = function (gait: any) {
+    //   console.log(gait);
+    //   setCoreInfo(gait);
+    //   const exists = gaits.slice();
+    //   if (exists.length > 10) {
+    //     exists.shift();
+    //   }
+    //   setGaits([...exists, gait]);
+    //   console.log(gaits);
+    // };
 
     setOrphe(orphe);
     connectMidi();
   }, []);
 
   const connect = () => {
-    orphe?.begin("RAW");
+    orphe?.begin();
   };
+
+  useEffect(() => {
+    const start = fuckArray[0];
+    const last = fuckArray.slice(-1)[0];
+    const timeDifference = last - start;
+    const beatTime = timeDifference / (fuckArray.length - 1);
+    const bpm = Math.round((60 * 1000) / beatTime);
+    console.log(bpm);
+
+    const maxBPM = 252;
+    const value = (bpm / maxBPM) * 127;
+    console.log(value)
+
+    outputMidi?.send([0xb0, 0, value]);
+    outputMidi?.send([0xb0, 1, value]);
+  }, [coreInfo.steps]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-5 p-5">
@@ -46,6 +85,7 @@ const StepTempoPage = () => {
             {key}: {value}
           </p>
         ))}
+        <p>{fuckArray.length}</p>
       </section>
       <section className="bg-gray-900 p-5 w-full rounded flex flex-col gap-3 text-white">
         <h1>midi devices</h1>
