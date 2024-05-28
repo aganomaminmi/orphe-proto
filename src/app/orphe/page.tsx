@@ -3,8 +3,7 @@ import { Orphe } from "@/lib/orphe/ORPHE-CORE";
 import { useEffect, useState } from "react";
 
 import { Howl } from "howler";
-
-let speed = 1;
+import { map } from "@/lib/utils/map";
 
 const OrphePage = () => {
   const [orphe, setOrphe] = useState<Orphe | null>(null);
@@ -12,12 +11,12 @@ const OrphePage = () => {
   const [accelY, setAccelY] = useState<number>(0);
   const [accelZ, setAccelZ] = useState<number>(0);
 
-  const [speed, setSpeed] = useState<number>(1);
 
   const [sound, setSound] = useState<Howl | null>(null);
   const [playList, setPlayList] = useState<number[]>([]);
 
   useEffect(() => {
+
     const orphe = new Orphe(1);
     orphe.setup();
 
@@ -49,21 +48,8 @@ const OrphePage = () => {
 
     setPlayList([...playList, id]);
   };
-  const map = (value: number, x1: number, y1: number, x2: number, y2: number) =>
-    ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
 
   sound?.rate(map(accelY, -0.19, 0.19, 0, 2), playList[0]);
-
-  // useEffect(() => {
-  //   if (accelX > 0.1) {
-  //     setSpeed(speed + 0.03);
-  //   } else if (accelX < -0.1) {
-  //     setSpeed(speed - 0.03);
-  //   }
-
-  // }, [accelX])
-
-  // sound?.rate(speed, playList[0]);
 
 
   return (
@@ -80,8 +66,11 @@ const OrphePage = () => {
       <section className="bg-gray-900 p-5 w-full rounded flex flex-col gap-3">
         <h1>Audio</h1>
         <button onClick={play}>play</button>
-        <p>speed: {speed}</p>
       </section>
+      <form onSubmit={(d) => {console.log(d); return false}}>
+      <input type="text"/>
+
+      </form>
     </main>
   );
 };

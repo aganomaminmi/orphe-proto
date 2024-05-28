@@ -16,7 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <header><h1>Orphe proto</h1></header>
+        <main className={inter.className}>{children}</main>
+      </body>
     </html>
   );
 }
