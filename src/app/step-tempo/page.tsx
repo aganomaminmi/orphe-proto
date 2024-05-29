@@ -7,21 +7,23 @@ const fuckArray: any[] = [];
 const StepTempoPage = () => {
   const [orphe, setOrphe] = useState<Orphe | null>(null);
   const [tempo, setTempo] = useState<number>(0);
+  const [bpm, setBpm] = useState<number>(0);
   const [outputMidiList, setOutputMidiList] = useState<MIDIOutput[]>([]);
   const [outputMidi, setOutputMidi] = useState<MIDIOutput | null>(null);
   const [coreInfo, setCoreInfo] = useState<any>({});
   const [gaits, setGaits] = useState<any[]>([]);
 
   const connectMidi = useCallback(() => {
-    if (typeof window !== "undefined") {
-      window.navigator.requestMIDIAccess().then((midi) => {
-        setOutputMidiList([]);
-        midi.outputs.forEach((output) => {
-          setOutputMidiList((exists) => [...exists, output]);
-        });
-      });
+    if (typeof window === "undefined") {
+      return;
     }
-  }, [window]);
+    window.navigator.requestMIDIAccess().then((midi) => {
+      setOutputMidiList([]);
+      midi.outputs.forEach((output) => {
+        setOutputMidiList((exists) => [...exists, output]);
+      });
+    });
+  }, [typeof window]);
 
   useEffect(() => {
     const orphe = new Orphe(0);
@@ -65,11 +67,11 @@ const StepTempoPage = () => {
     const timeDifference = last - start;
     const beatTime = timeDifference / (fuckArray.length - 1);
     const bpm = Math.round((60 * 1000) / beatTime);
-    console.log(bpm);
+    setBpm(bpm)
 
-    const maxBPM = 252;
+    const maxBPM = 200;
     const value = (bpm / maxBPM) * 127;
-    console.log(value)
+    setTempo(value);
 
     outputMidi?.send([0xb0, 0, value]);
     outputMidi?.send([0xb0, 1, value]);
@@ -86,7 +88,6 @@ const StepTempoPage = () => {
             {key}: {value}
           </p>
         ))}
-        <p>{fuckArray.length}</p>
       </section>
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
         <h1>midi devices</h1>
@@ -112,6 +113,7 @@ const StepTempoPage = () => {
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3 text-white">
         <h1>Audio</h1>
         <p>tempo: {tempo}</p>
+        <p>tempo: {bpm}</p>
         <input
           type="range"
           min="0"

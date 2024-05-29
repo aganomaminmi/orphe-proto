@@ -49,7 +49,7 @@ const GroovePlayerPage = () => {
     return () => {
       window.navigator.geolocation.clearWatch(id);
     };
-  }, [window]);
+  }, [typeof window]);
 
   useEffect(() => {
     if (!hasMotionPermission) {
