@@ -34,7 +34,7 @@ const StepTempoPage = () => {
       setGaits([...exists, gait]);
 
       fuckArray.push(Date.now().valueOf());
-      if (fuckArray.length > 5) {
+      if (fuckArray.length > 16) {
         fuckArray.shift();
       }
       console.log(fuckArray);

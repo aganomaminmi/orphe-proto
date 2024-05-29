@@ -4,19 +4,22 @@ import { useEffect, useState } from "react";
 
 import { Howl } from "howler";
 import { map } from "@/lib/utils/map";
+import { watchGPS } from "@/lib/gps";
 
-const OrphePage = () => {
+const GroovePlayerPage = () => {
   const [orphe, setOrphe] = useState<Orphe | null>(null);
   const [accelX, setAccelX] = useState<number>(0);
   const [accelY, setAccelY] = useState<number>(0);
   const [accelZ, setAccelZ] = useState<number>(0);
 
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  const [speed, setSpeed] = useState<number>(0);
 
   const [sound, setSound] = useState<Howl | null>(null);
   const [playList, setPlayList] = useState<number[]>([]);
 
   useEffect(() => {
-
     const orphe = new Orphe(1);
     orphe.setup();
 
@@ -36,6 +39,21 @@ const OrphePage = () => {
     setSound(sound);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const id = watchGPS((position) => {
+      console.log(position);
+      setSpeed(position.coords.speed ?? -1);
+      setLatitude(position.coords.latitude);
+      setLongitude(position.coords.longitude);
+    });
+    return () => {
+      window.navigator.geolocation.clearWatch(id);
+    }
+  }, [window]);
+
   const connect = () => {
     orphe?.begin("RAW");
   };
@@ -51,7 +69,6 @@ const OrphePage = () => {
 
   sound?.rate(map(accelY, -0.19, 0.19, 0, 2), playList[0]);
 
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-5 p-5">
       <section className="bg-gray-900 p-5 w-full rounded flex flex-col gap-3">
@@ -62,17 +79,18 @@ const OrphePage = () => {
           <p>accelY: {accelY}</p>
           <p>accelZ: {accelZ}</p>
         </div>
+        <div>
+          <p>latitude: {latitude}</p>
+          <p>longitude: {longitude}</p>
+          <p>speed: {speed}</p>
+        </div>
       </section>
       <section className="bg-gray-900 p-5 w-full rounded flex flex-col gap-3">
         <h1>Audio</h1>
         <button onClick={play}>play</button>
       </section>
-      <form onSubmit={(d) => {console.log(d); return false}}>
-      <input type="text"/>
-
-      </form>
     </main>
   );
 };
 
-export default OrphePage;
+export default GroovePlayerPage;
