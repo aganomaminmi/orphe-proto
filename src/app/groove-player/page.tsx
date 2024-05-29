@@ -11,6 +11,7 @@ const GroovePlayerPage = () => {
   const [accelY, setAccelY] = useState<number>(0);
   const [accelZ, setAccelZ] = useState<number>(0);
 
+  const [basisSpeed, setBasisSpeed] = useState<number>(60);
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [speed, setSpeed] = useState<number | null>(null);
@@ -20,7 +21,7 @@ const GroovePlayerPage = () => {
   const [playList, setPlayList] = useState<number[]>([]);
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
 
-  const [speedRate, setSpeedRate] = useState<number>(0);
+  const [calcedSpeed, setCalcedSpeed] = useState<number>(0);
 
   const [hasMotionPermission, setHasMotionPermission] =
     useState<boolean>(false);
@@ -89,12 +90,13 @@ const GroovePlayerPage = () => {
   const accel = -Math.round(map(accelY, -1, 1, -10, 10));
 
   useEffect(() => {
-    const calcedSpeed = Math.round(kmPerHour + accel) || 5;
+    const _calcedSpeed = Math.round(kmPerHour + accel) || 5;
 
-    sound?.rate(map(calcedSpeed, 0, 120, 0, 2), playList[0]);
+    const maxSpeed = basisSpeed * 2;
+    sound?.rate(map(_calcedSpeed, 0, maxSpeed, 0, 2), playList[0]);
 
-    setSpeedRate(calcedSpeed);
-  }, [speed, accelY, sound, playList]);
+    setCalcedSpeed(_calcedSpeed);
+  }, [basisSpeed, speed, accelY, sound, playList]);
 
   useEffect(() => {
     if (!sound) {
@@ -106,13 +108,15 @@ const GroovePlayerPage = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-5 px-5 py-10 text-white">
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
-        <h1>Orphe yey!</h1>
+        <h1 className="text-2xl">Sensor indicators</h1>
         <div>
+          <h2 className="text-lg">Accel</h2>
           <p>accelX: {accelX}</p>
           <p>accelY: {accelY}</p>
           <p>accelZ: {accelZ}</p>
         </div>
         <div>
+          <h2 className="text-lg">GPS</h2>
           <p>latitude: {latitude}</p>
           <p>longitude: {longitude}</p>
           <p>speed: {speed ?? "not available now."}</p>
@@ -128,9 +132,18 @@ const GroovePlayerPage = () => {
         </button>
       </section>
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
-        <h1>Audio</h1>
-        <p>speed rate: {speedRate}</p>
+        <h1 className="text-lg">Audio</h1>
+        <p>calculated speed: {calcedSpeed}</p>
         <p>accel correction: {accel}</p>
+        <fieldset className="flex gap-2 items-center">
+          <label htmlFor="basisSpeed">basis speed:</label>
+          <input
+            className="text-black w-24 px-4 py-1 rounded self-center"
+            type="number"
+            value={basisSpeed}
+            onChange={(e) => setBasisSpeed(Number(e.target.value))}
+          />
+        </fieldset>
         <button
           className="bg-gray-500 w-fit px-4 py-1 rounded self-center"
           onClick={playOrPause}
