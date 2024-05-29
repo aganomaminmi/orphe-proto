@@ -76,9 +76,10 @@ const StepTempoPage = () => {
   }, [coreInfo.steps]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-5 px-5 py-10">
-      <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3 text-white">
-        <h1>Orphe yey!</h1>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-5 px-5 py-10 text-white">
+      <p>This feature is only available on PC.</p>
+      <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
+        <h1>Orphe</h1>
         <button onClick={connect}>connect</button>
         {Object.entries(coreInfo).map(([key, value]: [string, any]) => (
           <p key={key}>
@@ -87,7 +88,7 @@ const StepTempoPage = () => {
         ))}
         <p>{fuckArray.length}</p>
       </section>
-      <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3 text-white">
+      <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
         <h1>midi devices</h1>
         <p>selected: {outputMidi?.name}</p>
         <select
