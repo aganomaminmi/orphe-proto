@@ -28,9 +28,9 @@ export default function RootLayout({
           type="text/javascript"
         />
       </head>
-      <body>
-        <header>
-          <h1>Orphe proto</h1>
+      <body className="min-h-screen">
+        <header className="h-10 flex items-center justify-center bg-gray-800">
+          <h1 className="font-bold text-lg">Orphe proto</h1>
         </header>
         <main className={inter.className}>{children}</main>
       </body>
