@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
+import cx from "classnames";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,11 +30,13 @@ export default function RootLayout({
           type="text/javascript"
         />
       </head>
-      <body className="min-h-screen">
-        <header className="h-10 flex items-center justify-center bg-gray-800">
-          <h1 className="font-bold text-lg">Orphe proto</h1>
+      <body className={cx("min-h-screen", inter.className)}>
+        <header className="h-10 flex items-center justify-center bg-gray-800 fixed top-0 w-full">
+          <h1 className="font-bold text-lg">
+            <Link href="/">Orphe proto</Link>
+          </h1>
         </header>
-        <main className={inter.className}>{children}</main>
+        {children}
       </body>
     </html>
   );

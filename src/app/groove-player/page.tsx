@@ -104,7 +104,7 @@ const GroovePlayerPage = () => {
   }, [accelX]);
 
   return (
-    <main className="flex h-full flex-col items-center justify-center gap-5 p-5 text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-5 px-5 py-10 text-white">
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
         <h1>Orphe yey!</h1>
         <div>
