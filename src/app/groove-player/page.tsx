@@ -92,7 +92,7 @@ const GroovePlayerPage = () => {
   useEffect(() => {
     const _calcedSpeed = Math.round(kmPerHour + accel) || 5;
 
-    const maxSpeed = basisSpeed * 2;
+    const maxSpeed = (basisSpeed || 1) * 2;
     sound?.rate(map(_calcedSpeed, 0, maxSpeed, 0, 2), playList[0]);
 
     setCalcedSpeed(_calcedSpeed);
