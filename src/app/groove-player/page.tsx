@@ -15,7 +15,7 @@ const GroovePlayerPage = () => {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [speed, setSpeed] = useState<number | null>(null);
-  const kmPerHour = (speed ?? 0 * 60 * 60) / 1000;
+  const kmPerHour = ((speed ?? 0) * 60 * 60) / 1000;
 
   const [sound, setSound] = useState<Howl | null>(null);
   const [playList, setPlayList] = useState<number[]>([]);
