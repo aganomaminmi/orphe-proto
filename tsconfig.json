@@ -12,6 +12,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "types": [
+      "./src/lib/orphe/ORPHE-CORE"
+    ],
     "plugins": [
       {
         "name": "next"

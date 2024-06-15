@@ -5,13 +5,18 @@ import { useCallback, useEffect, useState } from "react";
 const fuckArray: any[] = [];
 
 const StepTempoPage = () => {
-  const [orphe, setOrphe] = useState<Orphe | null>(null);
   const [tempo, setTempo] = useState<number>(0);
   const [bpm, setBpm] = useState<number>(0);
   const [outputMidiList, setOutputMidiList] = useState<MIDIOutput[]>([]);
   const [outputMidi, setOutputMidi] = useState<MIDIOutput | null>(null);
+
+  const [orphe, setOrphe] = useState<Orphe | null>(null);
   const [coreInfo, setCoreInfo] = useState<any>({});
   const [gaits, setGaits] = useState<any[]>([]);
+
+  const [orphe2, setOrphe2] = useState<Orphe | null>(null);
+  const [coreInfo2, setCoreInfo2] = useState<any>({});
+
 
   const connectMidi = useCallback(() => {
     if (typeof window === "undefined") {
@@ -28,8 +33,8 @@ const StepTempoPage = () => {
   useEffect(() => {
     const orphe = new Orphe(0);
     orphe.setup();
-
     orphe.gotGait = function (gait: any) {
+      console.log("fuck!!!!!!!!!!")
       setCoreInfo(gait);
       // ここを入れないとなぜかcoreInfoがアップデートされない
       const exists = gaits.slice();
@@ -41,24 +46,34 @@ const StepTempoPage = () => {
       }
       console.log(fuckArray);
     };
-
-    // orphe.gotGait = function (gait: any) {
-    //   console.log(gait);
-    //   setCoreInfo(gait);
-    //   const exists = gaits.slice();
-    //   if (exists.length > 10) {
-    //     exists.shift();
-    //   }
-    //   setGaits([...exists, gait]);
-    //   console.log(gaits);
-    // };
-
     setOrphe(orphe);
+
+    const orphe2 = new Orphe(1);
+    orphe2.setup();
+    orphe2.gotGait = function (gait: any) {
+      console.log("fuck!!!!!!!!!!")
+      setCoreInfo2(gait);
+      // ここを入れないとなぜかcoreInfoがアップデートされない
+      const exists = gaits.slice();
+      setGaits([...exists, gait]);
+
+      fuckArray.push(Date.now().valueOf());
+      if (fuckArray.length > 16) {
+        fuckArray.shift();
+      }
+      console.log(fuckArray);
+    };
+    setOrphe2(orphe2);
+
     connectMidi();
   }, []);
 
-  const connect = () => {
+  const connect1 = () => {
     orphe?.begin();
+  };
+
+  const connect2 = () => {
+    orphe2?.begin();
   };
 
   useEffect(() => {
@@ -69,7 +84,7 @@ const StepTempoPage = () => {
     const bpm = Math.round((60 * 1000) / beatTime);
     setBpm(bpm)
 
-    const maxBPM = 200;
+    const maxBPM = 252;
     const value = (bpm / maxBPM) * 127;
     setTempo(value);
 
@@ -81,9 +96,18 @@ const StepTempoPage = () => {
     <main className="flex min-h-screen flex-col items-center justify-center gap-5 px-5 py-10 text-white">
       <p>This feature is only available on PC.</p>
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
-        <h1>Orphe</h1>
-        <button onClick={connect}>connect</button>
+        <h1>core1</h1>
+        <button onClick={connect1}>connect</button>
         {Object.entries(coreInfo).map(([key, value]: [string, any]) => (
+          <p key={key}>
+            {key}: {value}
+          </p>
+        ))}
+      </section>
+      <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
+        <h1>core2</h1>
+        <button onClick={connect2}>connect</button>
+        {Object.entries(coreInfo2).map(([key, value]: [string, any]) => (
           <p key={key}>
             {key}: {value}
           </p>
