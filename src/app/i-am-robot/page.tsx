@@ -1,14 +1,21 @@
 "use client";
 import { Orphe } from "@/lib/orphe/ORPHE-CORE";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Tone from "tone";
 
 const StepTempoPage = () => {
   const [orpheList, setOrpheList] = useState<Orphe[]>([]);
-
   const gyroList = useRef<{ x: number; y: number; z: number }[]>([]);
   const accelList = useRef<{ x: number; y: number; z: number }[]>([]);
   // rendering更新のため
   const [_, setFrame] = useState(0);
+
+  const play = async () => {
+    const player = new Tone.Player().toDestination();
+    player.load("/Into_The_Night.mp3");
+    await Tone.loaded();
+    player.start();
+  }
 
   const addOrphe = () => {
     const index = orpheList.length;
@@ -49,6 +56,7 @@ const StepTempoPage = () => {
       <p>This feature is only available on PC.</p>
       <section className="bg-gray-800 p-5 w-full rounded flex flex-col gap-3">
         <button onClick={addOrphe}>connect</button>
+        <button onClick={play}>play</button>
       </section>
       {orpheList.map((orphe, index) => {
         const coreInfo = orphe.id;

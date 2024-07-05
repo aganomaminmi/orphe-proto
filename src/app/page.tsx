@@ -11,7 +11,7 @@ export default function Home() {
           allowFullScreen={true}
         />
       </section>
-      <section className="flex items-center justify-center gap-4">
+      <section className="flex flex-col items-center justify-center gap-4">
         <Link
           className="bg-gray-800 text-white p-3 rounded"
           href="/groove-player"
