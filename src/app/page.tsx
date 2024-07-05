@@ -24,6 +24,18 @@ export default function Home() {
         >
           Step tempo
         </Link>
+        <Link
+          className="bg-gray-800 text-white p-3 rounded"
+          href="/i-am-robot"
+        >
+          I AM ROBOT
+        </Link>
+        <Link
+          className="bg-gray-800 text-white p-3 rounded"
+          href="/groove-skate"
+        >
+          Groove skate
+        </Link>
       </section>
     </main>
   );
