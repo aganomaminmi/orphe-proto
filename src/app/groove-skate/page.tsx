@@ -1,12 +1,12 @@
 "use client";
 import { Orphe } from "@/lib/orphe/ORPHE-CORE";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
 
 const filter = new Tone.Filter({
   frequency: 1000,
   type: "highpass",
-  Q: 1.2,
+  Q: 10,
   gain: 1,
   rolloff: -12,
 }).toDestination();
@@ -18,7 +18,6 @@ const GrooveSkatePage = () => {
   // rendering更新のため
   const [frame, setFrame] = useState(0);
 
-  const filterRef = useRef<Tone.Filter>();
   const playerRef = useRef<Tone.Player | null>(null);
 
   const play = async () => {
@@ -26,7 +25,7 @@ const GrooveSkatePage = () => {
       playerRef.current.restart();
       return;
     }
-    playerRef.current = new Tone.Player("/Unwelcome-School.m4a")
+    playerRef.current = new Tone.Player("/Into_The_Night.mp3")
       .connect(filter);
     await Tone.loaded();
     playerRef.current.start();
@@ -40,7 +39,7 @@ const GrooveSkatePage = () => {
     accelList.current[index] = { x: 0, y: 0, z: 0 };
 
     orphe.gotGyro = function (gyro: any) {
-      const alpha = 0.01;
+      const alpha = 0.5;
       const prev = gyroList.current[index];
       gyroList.current[index] = {
         x: alpha * gyro.x + (1 - alpha) * prev.x,
@@ -52,7 +51,7 @@ const GrooveSkatePage = () => {
     };
 
     orphe.gotAcc = function (acc: any) {
-      const alpha = 0.01;
+      const alpha = 0.8;
       const prev = accelList.current[index];
       accelList.current[index] = {
         x: alpha * acc.x + (1 - alpha) * prev.x,
@@ -67,10 +66,10 @@ const GrooveSkatePage = () => {
   };
 
   useEffect(() => {
-    const coe = gyroList.current[0]?.y
+    const coe = gyroList.current[0]?.z
     if (!coe) return
     console.log('fuck', coe)
-    filter.frequency.value = Math.max(coe * 100000, 0)
+    filter.frequency.value = Math.max(Math.abs(coe) * 8000, 0)
 
     console.log(filter.frequency.value, playerRef.current)
 
