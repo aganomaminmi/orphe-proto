@@ -3,13 +3,16 @@ import { Orphe } from "@/lib/orphe/ORPHE-CORE";
 import { useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
 
-const filter = new Tone.Filter({
-  frequency: 1000,
-  type: "highpass",
-  Q: 10,
-  gain: 1,
-  rolloff: -12,
-}).toDestination();
+// AudioContext はブラウザにしか無いため、プリレンダリング時に評価されないよう遅延生成する
+let filter: Tone.Filter | null = null;
+const getFilter = () =>
+  (filter ??= new Tone.Filter({
+    frequency: 1000,
+    type: "highpass",
+    Q: 10,
+    gain: 1,
+    rolloff: -12,
+  }).toDestination());
 
 const GrooveSkatePage = () => {
   const [orpheList, setOrpheList] = useState<Orphe[]>([]);
@@ -26,7 +29,7 @@ const GrooveSkatePage = () => {
       return;
     }
     playerRef.current = new Tone.Player("/Into_The_Night.mp3")
-      .connect(filter);
+      .connect(getFilter());
     await Tone.loaded();
     playerRef.current.start();
   };
@@ -69,9 +72,9 @@ const GrooveSkatePage = () => {
     const coe = gyroList.current[0]?.z
     if (!coe) return
     console.log('fuck', coe)
-    filter.frequency.value = Math.max(Math.abs(coe) * 8000, 0)
+    getFilter().frequency.value = Math.max(Math.abs(coe) * 8000, 0)
 
-    console.log(filter.frequency.value, playerRef.current)
+    console.log(getFilter().frequency.value, playerRef.current)
 
   }, [frame]);
 
