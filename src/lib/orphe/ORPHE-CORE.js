@@ -16,7 +16,7 @@ export var float16Script;
 if (typeof document !== "undefined") {
   float16Script = document.createElement("script");
   float16Script.src =
-    "https://cdn.jsdelivr.net/gh/Orphe-OSS/ORPHE-CORE.js@main/js/float16.min.js";
+    "/orphe/float16.min.js";
   float16Script.type = "text/javascript";
   float16Script.crossOrigin = "anonymous";
 }
@@ -31,7 +31,7 @@ export var quaternionScript;
 if (typeof document !== "undefined") {
   quaternionScript = document.createElement("script");
   quaternionScript.src =
-    "https://cdn.jsdelivr.net/gh/Orphe-OSS/ORPHE-CORE.js@main/js/quaternion.js";
+    "/orphe/quaternion.js";
   quaternionScript.type = "text/javascript";
   quaternionScript.crossOrigin = "anonymous";
 }
